@@ -18,7 +18,7 @@ public class MyItemReadListener implements ItemReadListener<MyEntity> {
     @Override
     public void afterRead(MyEntity myEntity) {
         if (map.containsKey(myEntity.getId())) {
-            log.error("Has key: {}", myEntity.getId());
+            log.error("Has key: {}", myEntity.getId()); // TODO Item is being read more than once. Why?
         } else {
             map.put(myEntity.getId(), myEntity.getName());
             log.warn("Item Read: {}", myEntity);
