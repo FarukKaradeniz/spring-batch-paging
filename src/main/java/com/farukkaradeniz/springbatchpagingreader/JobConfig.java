@@ -1,11 +1,13 @@
 package com.farukkaradeniz.springbatchpagingreader;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -13,9 +15,7 @@ import org.springframework.batch.integration.async.AsyncItemProcessor;
 import org.springframework.batch.integration.async.AsyncItemWriter;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 @Slf4j
@@ -72,16 +71,10 @@ public class JobConfig implements InitializingBean {
         return stepBuilderFactory.get("myStep")
                 .<MyEntity, Future<MyEntity>>chunk(3)
                 .reader(myItemReader())
-                .listener(new MyItemReadListener(map()))
                 .processor(myItemProcessor())
                 .writer(myItemWriter())
                 .taskExecutor(otherTaskExecutor())
                 .build();
-    }
-
-    @Bean
-    private ConcurrentHashMap<String, String> map() {
-        return new ConcurrentHashMap<>(50);
     }
 
     public ItemReader<MyEntity> myItemReader() {
