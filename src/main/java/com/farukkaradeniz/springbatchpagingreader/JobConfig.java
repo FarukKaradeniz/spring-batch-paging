@@ -46,7 +46,7 @@ public class JobConfig implements InitializingBean {
 
     public TaskExecutor taskExecutor() {
         SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
-        executor.setConcurrencyLimit(5);
+        executor.setConcurrencyLimit(3);
         executor.setThreadNamePrefix("Thread-");
         return executor;
     }
@@ -73,7 +73,7 @@ public class JobConfig implements InitializingBean {
                 .reader(myItemReader())
                 .processor(myItemProcessor())
                 .writer(myItemWriter())
-                .taskExecutor(otherTaskExecutor())
+                .taskExecutor(taskExecutor())
                 .build();
     }
 
